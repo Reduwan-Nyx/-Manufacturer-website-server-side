@@ -38,6 +38,7 @@ async function run(){
         const bookingCollection = client.db('cart_tool').collection('booking')
         const userCollection = client.db('cart_tool').collection('users')
         const purchaseCollection = client.db('cart_tool').collection('purchase')
+        const reviewsCollection = client.db('cart_tool').collection('reviews')
 
       const verifyAdmin = async(req,res, next) =>{
           const requester = req.decoded.email;
@@ -133,6 +134,15 @@ async function run(){
         res.send(reuslt)
       })
   
+
+      // review
+      app.get('/reviews', async(req,res)=>{
+        const review = await reviewsCollection.find().toArray()
+        res.send(review)
+      })
+
+      
+
 
     }
     finally{
