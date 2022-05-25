@@ -113,7 +113,11 @@ async function run(){
        res.send({result , token})
       })
 
-
+      // purchase
+      app.get('/purchase', verifyJWT,verifyAdmin, async(req,res)=>{
+        const products = await purchaseCollection.find().toArray()
+        res.send(products)
+      })
 
       // purchase
       app.post('/purchase', verifyJWT, verifyAdmin, async(req, res)=>{
