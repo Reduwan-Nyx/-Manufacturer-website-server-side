@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 const app = express();
@@ -37,7 +37,26 @@ async function run(){
         const servicesCollection = client.db('cart_tool').collection('services')  
         const bookingCollection = client.db('cart_tool').collection('booking')
         const userCollection = client.db('cart_tool').collection('users')
+
+
+      // product
       
+      app.get('/services', async(req,res)=>{
+        const query = {}
+        const cursor = servicesCollection.find(query);
+        const services = await cursor.toArray();
+        res.send(services)
+      })
+
+      app.get('/services/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query ={_id: ObjectId(id)};
+        const service = await servicesCollection.findOne(query);
+        res.send(service);
+    })
+
+      
+
 
         // users get
         app.get('/user', verifyJWT, async(req,res)=>{
