@@ -125,6 +125,13 @@ async function run(){
         const reuslt = await purchaseCollection.insertOne(purchase)
         res.send(reuslt)
       })
+      //product delete
+      app.delete('/purchase/:email', verifyJWT, verifyAdmin, async(req, res)=>{
+        const email = req.params.email;
+        const fitler ={email: email}
+        const reuslt = await purchaseCollection.deleteOne(fitler)
+        res.send(reuslt)
+      })
   
 
     }
