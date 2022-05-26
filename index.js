@@ -149,6 +149,54 @@ async function run(){
       
 
 
+        // booking
+
+
+        app.get('/booking', async(req, res)=>{
+          const product = req.query.product;
+          const query = {product: product}
+          const bookings = await bookingCollection.find(query).toArray()
+          res.send(bookings)
+        })
+
+        
+        app.post('/booking', async(req, res)=>{
+          const booking = req.body;
+          const query = {booking: booking.booking, product: booking.product}
+          const result = await bookingCollection.findOne(query)
+          res.send(result)
+        })
+        
+
+
+
+
+
+
+
+
+        app.post("/services", async (req, res) => {
+          const newService = req.body;
+          const result = await servicesCollection.insertOne(newService);
+          res.send(result);
+        });
+
+
+        app.put('/services/:id', async(req, res)=>{
+          const id = req.params.id;
+          const updatedStock = req.body;
+          const filter = {_id: ObjectId(id)}
+          const options = {upsert: true};
+   
+          const updateDoc = {
+              $set:{
+                  quantity: updatedStock.quantity,
+              },
+          };
+          const result = await servicesCollection.updateOne(filter,updateDoc, options);
+          res.send(result)
+      })
+
     }
     finally{
 
