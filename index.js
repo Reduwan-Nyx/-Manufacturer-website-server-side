@@ -3,6 +3,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { ObjectID } = require('bson');
 
 
 const app = express();
@@ -163,11 +164,21 @@ async function run(){
         app.post('/booking', async(req, res)=>{
           const booking = req.body;
           const query = {booking: booking.booking, product: booking.product}
-          const result = await bookingCollection.findOne(query)
-          res.send(result)
+          const exists = await bookingCollection.findOne(query);
+          if(exists){
+            return res.send({success: false, booking: exists})
+          }
+          const result = await bookingCollection.insertOne(booking)
+          res.send({success: true, result})
         })
         
 
+        app.get('/booking/:id', async(req, res)=>{
+          const id = req.params.id;
+          const query = {_id: ObjectID(id)}
+          const booking = await bookingCollection.findOne(query)
+          res.send(booking)
+        })
 
 
 
